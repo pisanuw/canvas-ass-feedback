@@ -9,3 +9,7 @@
 2026-05-07 [scope] reinforcement-2 (Parts 3+4, assignment 11417717): graded 15 submissions, uploaded all 15 successfully
 2026-05-07 [note] reinforcement-2: thursday3 submission contains prompt injection attempt; thursday11 contains AI-generation artifact text; flagged to instructor
 2026-05-07 [note] canvas-assignment-feedback skill: graded questions parameter added (e.g., "questions 3 and 4") to scope grading to specific parts
+2026-05-08 [doc] Created README.md documenting all scripts, workflow, auth setup, and requirements
+2026-05-08 [doc] Created .gitignore excluding submission folders, screenshots, auth-state.json, canvas-token.txt, cookies-* files
+2026-05-08 [doc] Redacted Canvas URLs and assignment IDs from AI-log.md before committing
+2026-05-08 [note] Repository initialized and pushed to github.com/pisanuw/canvas-ass-feedback

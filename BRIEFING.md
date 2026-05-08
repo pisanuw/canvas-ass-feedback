@@ -8,3 +8,4 @@
   - Upload script: canvas-upload-feeback.py; token in canvas-token.txt
   - Feedback header must read "Claude.AI" (not "Canvas.AI")
 - Non-goals: Automated student grade submission (scores are informational in comments only, not posted to gradebook)
+- Repository: github.com/pisanuw/canvas-ass-feedback (submissions, auth files, and secrets are gitignored)
