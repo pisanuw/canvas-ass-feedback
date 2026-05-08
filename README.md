@@ -1,6 +1,6 @@
 # Canvas Assignment Feedback
 
-Tools for grading CSS 382 student submissions and uploading feedback to Canvas SpeedGrader as inline comments.
+Tools for grading student submissions and uploading feedback to Canvas SpeedGrader as inline comments.
 
 ## Scripts
 

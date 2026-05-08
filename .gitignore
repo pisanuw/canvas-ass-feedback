@@ -10,3 +10,6 @@ screenshots/
 auth-state.json
 canvas-token.txt
 cookies-*.txt
+
+# MacOS junk
+.DS_Store
