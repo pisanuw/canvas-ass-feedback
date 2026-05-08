@@ -1,0 +1,12 @@
+# Assignment submissions and feedback
+mdp/
+reinforcement-1/
+reinforcement-2/
+
+# Screenshots
+screenshots/
+
+# Auth and secrets
+auth-state.json
+canvas-token.txt
+cookies-*.txt
