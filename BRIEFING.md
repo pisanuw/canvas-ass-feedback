@@ -1,11 +1,24 @@
 # Briefing
 
 - Purpose: Automate grading and Canvas feedback upload for CSS 382 assignments
-- Current scope: Grade student PDF submissions, generate plain-text feedback files, upload as inline SpeedGrader comments via Canvas REST API
+- Current scope:
+  - Grade student PDF submissions, generate plain-text feedback files, upload as inline SpeedGrader comments via Canvas REST API
+  - Run per-student Python autograder submissions, parse scores, upload grades + autograder output to Canvas gradebook
+- Scripts:
+  - scripts/canvas_api.py: shared Canvas PUT helper, token loader, URL builder
+  - scripts/upload_feedback.py: upload markdown feedback files as Canvas comments (replaces canvas-upload-feeback.py)
+  - scripts/upload_grades.py: upload numeric scores from autograder JSON results to Canvas gradebook
+  - scripts/run_autograder.py: copy student .py into framework, run autograder.py, parse Total: X/Y, save JSON
+  - scripts/config_loader.py: merge JSON config with argparse defaults
+  - scripts-sharepoint/save_auth.py: Playwright browser login to save SharePoint auth state
+  - scripts-sharepoint/sharepoint_ocr.py: Playwright + Tesseract OCR extraction from SharePoint Word Online documents
+  - configs/ma.json: config for Multiagent assignment (course, assignment IDs, dirs, timeout)
 - Key decisions:
   - Feedback files are plain text (no markdown symbols) to avoid PDF download prompt
-  - Canvas API requires comment[group_comment]=true for group assignments; without it comments are invisible in SpeedGrader
-  - Upload script: canvas-upload-feeback.py; token in canvas-token.txt
+  - Canvas API requires comment[group_comment]=true for group assignments (always on); without it comments are invisible in SpeedGrader
+  - Token stored in canvas-token.txt (gitignored) or ~/local/bin/token-canvas.txt
   - Feedback header must read "Claude.AI" (not "Canvas.AI")
-- Non-goals: Automated student grade submission (scores are informational in comments only, not posted to gradebook)
+  - Autograder: copy student file as multiAgents.py into framework dir, delete after each run
+  - Results JSON keyed by canvas_user_id; saved after each student for crash safety
+- Non-goals: No AI-generated feedback or sample solutions; no grade breakdown per question
 - Repository: github.com/pisanuw/canvas-ass-feedback (submissions, auth files, and secrets are gitignored)

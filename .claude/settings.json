@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/pisan/bitbucket/pisanuw/run-student-assignments/**)",
+      "Bash(mkdir -p /Users/pisan/bitbucket/pisanuw/canvas-ass-feedback/scripts /Users/pisan/bitbucket/pisanuw/canvas-ass-feedback/configs)",
+      "Bash(cp /Users/pisan/bitbucket/pisanuw/run-student-assignments/scripts/run_autograder.py /Users/pisan/bitbucket/pisanuw/canvas-ass-feedback/scripts/)",
+      "Bash(cp /Users/pisan/bitbucket/pisanuw/run-student-assignments/scripts/upload_grades.py /Users/pisan/bitbucket/pisanuw/canvas-ass-feedback/scripts/)",
+      "Bash(cp /Users/pisan/bitbucket/pisanuw/run-student-assignments/scripts/config_loader.py /Users/pisan/bitbucket/pisanuw/canvas-ass-feedback/scripts/)",
+      "Bash(cp /Users/pisan/bitbucket/pisanuw/run-student-assignments/configs/ma.json /Users/pisan/bitbucket/pisanuw/canvas-ass-feedback/configs/)"
+    ],
+    "additionalDirectories": [
+      "/Users/pisan/bitbucket/pisanuw/canvas-ass-feedback"
+    ]
+  }
+}

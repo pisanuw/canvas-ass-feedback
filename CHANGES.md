@@ -13,3 +13,7 @@
 2026-05-08 [doc] Created .gitignore excluding submission folders, screenshots, auth-state.json, canvas-token.txt, cookies-* files
 2026-05-08 [doc] Redacted Canvas URLs and assignment IDs from AI-log.md before committing
 2026-05-08 [note] Repository initialized and pushed to github.com/pisanuw/canvas-ass-feedback
+2026-05-08 [scope] Copied scripts from run-student-assignments repo: run_autograder.py, upload_grades.py, config_loader.py, configs/ma.json
+2026-05-08 [code] Refactored: extracted shared Canvas helpers into scripts/canvas_api.py (load_token, build_submission_url, canvas_put)
+2026-05-08 [code] Created scripts/upload_feedback.py (replaces canvas-upload-feeback.py); uses canvas_api; comment[group_comment] always on
+2026-05-08 [code] Moved save-auth.py and sharepoint-ocr.py to scripts-sharepoint/ with snake_case names; deleted old root-level files

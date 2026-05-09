@@ -96,3 +96,9 @@ All good. Success
 
 ## 2026-05-03T08:10
 Create a canvas-assignment-feedback agent
+
+2026-05-08T00:00 User: /Users/pisan/bitbucket/pisanuw/run-student-assignments contains a related repository. It runs each student submission using the framework provided. First, copy the scripts from /Users/pisan/bitbucket/pisanuw/run-student-assignments into this repository so the functionality can be centralized. Next, make a plan on how to refactor the code so it is cleaner and more modular. Ask me for feedback on the plan before implementing it.
+
+2026-05-08T00:01 User: 1. Always on
+2. Inside scripts
+3. Put them in scripts-sharepoint/
