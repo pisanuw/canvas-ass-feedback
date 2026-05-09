@@ -1,77 +1,180 @@
 # Canvas Assignment Feedback
 
-Tools for grading student submissions and uploading feedback to Canvas SpeedGrader as inline comments.
+Tools for grading student submissions, running autograders, and uploading feedback and grades to Canvas.
 
-## Scripts
-
-### canvas-upload-feeback.py
-
-Uploads `*_feedback.md` files as submission comments via the Canvas REST API.
+## Repository Structure
 
 ```
-python3 canvas-upload-feeback.py <course_id> \
-  --homeworks-dir <submissions_folder> \
-  --server https://canvas.uw.edu \
-  --token <token> \
-  --assignment-id <assignment_id>
+scripts/
+  canvas_api.py         # Shared Canvas REST API helpers (token, PUT, URL builder)
+  upload_feedback.py    # Upload markdown feedback files as Canvas comments
+  upload_grades.py      # Upload numeric scores from autograder results JSON
+  run_autograder.py     # Run per-student Python autograder, parse scores, save JSON
+  config_loader.py      # Merge JSON config with argparse CLI defaults
+scripts-sharepoint/
+  save_auth.py          # Playwright browser login to save SharePoint session
+  sharepoint_ocr.py     # Playwright + Tesseract OCR for SharePoint Word docs
+configs/
+  ma.json               # Example config for Multiagent assignment
 ```
 
-Feedback files must be named with at least two underscore-separated numeric tokens, matching the Canvas submission filename convention, e.g.:
+## Usage
+
+### 1. Upload markdown feedback to Canvas (manual grading workflow)
+
+Grade student PDFs by hand (or with the `/canvas-assignment-feedback` skill), then upload the resulting `*_feedback.md` files as SpeedGrader comments.
+
+```bash
+python scripts/upload_feedback.py \
+  --homeworks-dir reinforcement-2 \
+  --course-id 1902104 \
+  --assignment-id 11417717 \
+  --canvas-server https://canvas.uw.edu \
+  --token-file ~/local/bin/token-canvas.txt
+```
+
+Or use a config file:
+
+```bash
+python scripts/upload_feedback.py --config configs/ma.json --homeworks-dir reinforcement-2
+```
+
+Feedback filenames must contain at least two underscore-separated numeric tokens (Canvas submission format):
 
 ```
 reinforcementthursday1_4469428_149726581_feedback.md
+                       ^^^^^^^                        <- Canvas user ID
+                                ^^^^^^^^^             <- second numeric token (or use --assignment-id)
 ```
 
-The first numeric token is treated as the Canvas user ID.
+Add `--dry-run` to preview without uploading. Add `--limit 3` to upload only the first 3 files.
 
-Uses `comment[group_comment]=true` so comments appear in SpeedGrader for group assignments.
+### 2. Run an autograder on student Python submissions
 
-### save-auth.py
+Copy each student's `.py` file into a framework directory, run `autograder.py`, parse the `Total: X/Y` score, and save results to JSON.
 
-Opens a browser window for manual login to SharePoint, then saves the full session (cookies + storage) to `auth-state.json` for use by `sharepoint-ocr.py`.
-
-```
-python3 save-auth.py <sharepoint_url>
-```
-
-### sharepoint-ocr.py
-
-Extracts text from a SharePoint Word Online document by scrolling through it with Playwright and running Tesseract OCR on each screenshot.
-
-```
-python3 sharepoint-ocr.py <url> [--out output.txt]
+```bash
+python scripts/run_autograder.py \
+  --assignments-dir assignments/ma \
+  --framework-dir frameworks/multiagent \
+  --results-file results/ma_results.json \
+  --timeout 60
 ```
 
-Reads auth state from `auth-state.json` (created by `save-auth.py`). Falls back to `cookies-fedauth.txt` / `cookies-rtfa.txt` if `auth-state.json` is absent.
+Or with a config file:
 
-Outputs:
-- `screenshots/page_NNN.png` (one per page)
-- `<output.txt>` (concatenated OCR text, default: `document-text.txt`)
+```bash
+python scripts/run_autograder.py --config configs/ma.json
+```
 
-## Workflow
+Options:
+- `--student <name>`: run for one student only (debugging)
+- `--force`: re-run even if already graded
+- `--timeout <seconds>`: per-student time limit (default: 60)
 
-The `/canvas-assignment-feedback` Claude Code skill automates the full grading workflow:
+Supports resume: students already recorded in the results JSON are skipped.
+
+### 3. Upload autograder scores to Canvas gradebook
+
+Read the results JSON produced by `run_autograder.py` and upload each student's numeric grade. Attaches autograder output as a comment when score < max.
+
+```bash
+python scripts/upload_grades.py \
+  --results-file results/ma_results.json \
+  --course-id 1902104 \
+  --assignment-id 11224139 \
+  --canvas-server https://canvas.uw.edu \
+  --token-file ~/local/bin/token-canvas.txt
+```
+
+Or with a config file:
+
+```bash
+python scripts/upload_grades.py --config configs/ma.json
+```
+
+Options:
+- `--dry-run`: preview without uploading
+- `--force`: re-upload even if already marked success
+- `--student <name>`: upload for one student only
+
+### 4. Full autograder pipeline (config file)
+
+Create a JSON config in `configs/` for your assignment:
+
+```json
+{
+  "assignment": {
+    "name": "Multiagent",
+    "assignments_dir": "assignments/ma",
+    "framework_dir": "frameworks/multiagent",
+    "results_file": "results/ma_results.json",
+    "timeout": 60
+  },
+  "canvas": {
+    "server": "https://canvas.uw.edu",
+    "course_id": "1902104",
+    "assignment_id": "11224139",
+    "token_file": "~/local/bin/token-canvas.txt"
+  }
+}
+```
+
+Then run both steps:
+
+```bash
+python scripts/run_autograder.py --config configs/ma.json
+python scripts/upload_grades.py --config configs/ma.json
+```
+
+CLI arguments override config values, which override hardcoded defaults.
+
+### 5. SharePoint document extraction
+
+Save a browser session (one-time login):
+
+```bash
+python scripts-sharepoint/save_auth.py <sharepoint_url>
+```
+
+Extract text via OCR:
+
+```bash
+python scripts-sharepoint/sharepoint_ocr.py <url> --out output.txt
+```
+
+Outputs `screenshots/page_NNN.png` and the concatenated OCR text.
+
+## Claude Code Skills
+
+### /canvas-assignment-feedback
+
+Automates the manual grading workflow:
 
 1. Read the assignment PDF to understand questions and rubric
-2. Create `<submissions_folder>/sample-solution.md` as a reference
+2. Create a sample solution as reference
 3. Grade each student PDF and write a `*_feedback.md` file
-4. Upload all feedback files to Canvas via `canvas-upload-feeback.py`
-5. Report score distribution and flag any skipped or failed uploads
+4. Upload all feedback to Canvas via `upload_feedback.py`
+5. Report score distribution and flag skipped/failed uploads
 
-Invoke with:
+### /run-autograder
 
-```
-/canvas-assignment-feedback
-```
-
-Provide: Canvas assignment URL, which questions to grade, submissions folder, and assignment PDF path.
+Orchestrates the autograder pipeline (run + upload).
 
 ## Auth Setup
 
-1. Put your Canvas API token in `canvas-token.txt` (one line, no trailing whitespace).
-2. For SharePoint access, run `save-auth.py` once to create `auth-state.json`.
+1. Put your Canvas API token in `canvas-token.txt` or `~/local/bin/token-canvas.txt` (one line, no trailing whitespace).
+2. For SharePoint access, run `scripts-sharepoint/save_auth.py` once to create `auth-state.json`.
 
 ## Requirements
+
+Canvas scripts:
+
+```
+pip install requests
+```
+
+SharePoint scripts:
 
 ```
 pip install playwright pytesseract pillow

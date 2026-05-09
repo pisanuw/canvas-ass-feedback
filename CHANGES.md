@@ -17,3 +17,4 @@
 2026-05-08 [code] Refactored: extracted shared Canvas helpers into scripts/canvas_api.py (load_token, build_submission_url, canvas_put)
 2026-05-08 [code] Created scripts/upload_feedback.py (replaces canvas-upload-feeback.py); uses canvas_api; comment[group_comment] always on
 2026-05-08 [code] Moved save-auth.py and sharepoint-ocr.py to scripts-sharepoint/ with snake_case names; deleted old root-level files
+2026-05-09 [doc] Rewrote README.md with usage instructions for all 5 contexts: feedback upload, autograder run, grade upload, config pipeline, SharePoint OCR

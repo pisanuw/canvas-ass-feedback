@@ -102,3 +102,7 @@ Create a canvas-assignment-feedback agent
 2026-05-08T00:01 User: 1. Always on
 2. Inside scripts
 3. Put them in scripts-sharepoint/
+
+2026-05-09T00:00 User: Update the README file with instructions on how to use the programs in different contexts
+
+2026-05-09T00:01 User: /close
