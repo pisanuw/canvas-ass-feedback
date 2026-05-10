@@ -106,3 +106,18 @@ Create a canvas-assignment-feedback agent
 2026-05-09T00:00 User: Update the README file with instructions on how to use the programs in different contexts
 
 2026-05-09T00:01 User: /close
+
+2026-05-09T00:02 User: Need to do some debugging
+For assignment REDACTED using configs/ma.json
+All student feedback was uploaded but for assignments/ma/halekylegoto_4497070_149345203_multiAgents-1.py, the feedback appears as a PDF file which can be downloaded, but there is no visible text
+
+2026-05-09T00:03 User: Write a script to get an updated Canvas token easily
+
+2026-05-09T00:04 User: Try accessing Canvas with new token in ~/local/bin/token-0canvas.txt
+
+2026-05-09T00:05 User: Try accessing Canvas with new token in ~/local/bin/token-canvas.txt
+
+2026-05-09T00:06 User: I left a new comment "Hello" for that student which is visible
+The comments about the assignment are not visible
+
+2026-05-10T00:00 User: /close

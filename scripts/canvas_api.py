@@ -28,6 +28,18 @@ def build_submission_url(server: str, course_id: str, assignment_id: str, user_i
     )
 
 
+def get_submission_attempt(url: str, token: str) -> int | None:
+    """Fetch the current attempt number for a submission. Returns None on error."""
+    headers = {"Authorization": f"Bearer {token}"}
+    try:
+        resp = requests.get(url, headers=headers, timeout=15)
+        if resp.status_code == 200:
+            return resp.json().get("attempt")
+    except requests.RequestException:
+        pass
+    return None
+
+
 def canvas_put(url: str, token: str, data: dict, dry_run: bool) -> requests.Response | None:
     """
     Send a PUT request to the Canvas API.

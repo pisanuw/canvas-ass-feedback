@@ -18,3 +18,7 @@
 2026-05-08 [code] Created scripts/upload_feedback.py (replaces canvas-upload-feeback.py); uses canvas_api; comment[group_comment] always on
 2026-05-08 [code] Moved save-auth.py and sharepoint-ocr.py to scripts-sharepoint/ with snake_case names; deleted old root-level files
 2026-05-09 [doc] Rewrote README.md with usage instructions for all 5 contexts: feedback upload, autograder run, grade upload, config pipeline, SharePoint OCR
+2026-05-10 [note] Canvas comments need comment[attempt]=N matching submission attempt; without it SpeedGrader hides the comment
+2026-05-10 [code] Added get_submission_attempt() to canvas_api.py; upload_grades.py now fetches attempt before posting comment
+2026-05-10 [code] Created scripts/refresh_token.py: opens Canvas Settings, validates + saves new token to both token file locations
+2026-05-10 [note] Fixed halekylegoto (4497070) invisible comment: deleted null-attempt comment, re-posted with attempt=2

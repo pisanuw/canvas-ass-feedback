@@ -16,6 +16,7 @@
 - Key decisions:
   - Feedback files are plain text (no markdown symbols) to avoid PDF download prompt
   - Canvas API requires comment[group_comment]=true for group assignments (always on); without it comments are invisible in SpeedGrader
+  - Canvas API requires comment[attempt]=N matching the submission attempt number; without it SpeedGrader hides the comment
   - Token stored in canvas-token.txt (gitignored) or ~/local/bin/token-canvas.txt
   - Feedback header must read "Claude.AI" (not "Canvas.AI")
   - Autograder: copy student file as multiAgents.py into framework dir, delete after each run

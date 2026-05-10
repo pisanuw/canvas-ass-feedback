@@ -28,7 +28,7 @@ import json
 import sys
 from pathlib import Path
 
-from canvas_api import build_submission_url, canvas_put, load_token
+from canvas_api import build_submission_url, canvas_put, get_submission_attempt, load_token
 from config_loader import apply_config_defaults, load_config
 
 
@@ -61,6 +61,10 @@ def upload_grade(
     data: dict = {"submission[posted_grade]": str(score)}
     if max_score is not None and score < max_score:
         data["comment[text_comment]"] = autograder_output
+        # Tie comment to the current submission attempt so it appears in SpeedGrader
+        attempt = get_submission_attempt(url, token)
+        if attempt is not None:
+            data["comment[attempt]"] = str(attempt)
 
     response = canvas_put(url, token, data, dry_run)
 
